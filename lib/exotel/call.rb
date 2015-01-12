@@ -1,9 +1,6 @@
 # -*- encoding: utf-8 -*-
-require 'httparty'
 module Exotel
-  class Call
-    include HTTParty
-    base_uri "https://twilix.exotel.in/v1/Accounts"
+  class Call < ExotelBase
     
     def initialize; end
     
@@ -22,14 +19,14 @@ module Exotel
     
     def connect_to_flow(params={})
       if valid?(params, {:type => 'flow'})
-        params = transfrom_params(params, {:type => 'flow'})
+        params = transfrom_params_with_options(params, {:type => 'flow'})
         make_call(params)
       end
     end
     
     def connect_to_agent(params={})
       if valid?(params, {:type => 'agent'})
-        params = transfrom_params(params, {:type => 'agent'})
+        params = transfrom_params_with_options(params, {:type => 'agent'})
         make_call(params)
       end
     end
@@ -61,27 +58,17 @@ module Exotel
       raise Exotel::ParamsError, "Call Type is not valid" unless ['trans', 'promo'].include?(params[:call_type])
     end
     
-    def auth
-      {:username => Exotel.exotel_sid, :password => Exotel.exotel_token}
-    end
-    
     def flow_url(flow_id)
       "http://my.exotel.in/exoml/start/#{flow_id}"
     end
     
-    def transfrom_params(params, options)
+    def transfrom_params_with_options(params, options)
       if options[:type] == 'flow'
         #Construct flow url and delete flow_id.
         params = params.merge(:URL => flow_url(params[:flow_id]))
         params.delete(:flow_id)
       end
-        
-      #Keys are converted to camelcase
-      params.inject({}){ |h, (key, value)| h[camelcase_key(key)] = value; h }
-    end
-    
-    def camelcase_key(key)
-      key.to_s.split('_').map(&:capitalize).join.to_sym #Input: call_type, Output: :CallType
+      transfrom_params params
     end
     
     def handle_response(response)
