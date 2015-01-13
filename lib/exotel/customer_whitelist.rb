@@ -4,7 +4,7 @@ module Exotel
     def initialize; end
     
     def self.whitelist(params={})
-      self.new.send(params)
+      self.new.whitelist(params)
     end
     
     def whitelist(params={})
@@ -14,6 +14,19 @@ module Exotel
         response = self.class.post("/#{Exotel.exotel_sid}/CustomerWhitelist/",  {:body => params, :basic_auth => auth })
         handle_response(response)
       end  
+    end
+
+    def self.details(params={})
+      self.new.details(params)
+    end
+
+    def details(params={})
+      if params[:number]
+        response = self.class.get("/#{Exotel.exotel_sid}/CustomerWhitelist/#{params[:number]}",  {:basic_auth => auth })
+        handle_response(response)
+      else
+        raise Exotel::ParamsError, "Missing one or many required parameters."
+      end
     end
     
     protected

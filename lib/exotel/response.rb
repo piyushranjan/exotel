@@ -14,7 +14,7 @@ module Exotel
     end
     
     def set_response_data(response_base)
-      (response_base['Call'] or response_base['SMSMessage']).each do |key, value|
+      (response_base['Call'] or response_base['SMSMessage'] or response_base['Result']).each do |key, value|
         set_variable(key, value)
       end
     end
