@@ -50,6 +50,16 @@
   
     response.status = 'DND'
     response.message will be some thing like 'Call to ****** cannot be made because of TRAI NDNC regulations'
+
+  **To whitelist a number which is part of the dnd ncpr registry**
+  
+    Exotel::CustomerWhitelist.whitelist({virtual_number: 'Your Exotel Virtual Number', number: num1})
+
+    Exotel::CustomerWhitelist.whitelist({virtual_number: 'Your Exotel Virtual Number', number: [num1, num2]})
+
+  **To check if a number has been whitelisted or not**
+  
+    Exotel::CustomerWhitelist.details({number: num1})
    
 ## Run tests
   rake test
